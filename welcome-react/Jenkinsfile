@@ -8,16 +8,14 @@ pipeline {
 
     stages {
 
-        stage('Clone Code') {
-            steps {
-                git branch: 'main',
-                    url: 'https://github.com/JA10-git/NSDC.git'
-            }
-        }
+        // ❌ Clone Code stage REMOVED
+        // Jenkins already checks out the repo using SCM
 
         stage('Build Docker Image') {
             steps {
-                bat 'docker build -t %IMAGE_NAME% .'
+                dir('welcome-react') {
+                    bat 'docker build -t %IMAGE_NAME% .'
+                }
             }
         }
 
@@ -33,7 +31,7 @@ pipeline {
         stage('Run Docker Container') {
             steps {
                 bat '''
-                docker run -d -p 5173:5173 --name %CONTAINER_NAME% %IMAGE_NAME%
+                docker run -d -p 3000:80 --name %CONTAINER_NAME% %IMAGE_NAME%
                 '''
             }
         }
